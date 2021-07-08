@@ -94,5 +94,9 @@ namespace unitrys{
         public void RestoreTexture(){
             texture = _texture;
         }
+        
+        public void ResetColor(){
+            _meshRenderer.material.color = _color;
+        }
     }
 }

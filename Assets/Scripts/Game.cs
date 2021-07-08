@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections;
 
 namespace unitrys{
@@ -30,12 +31,15 @@ namespace unitrys{
 
         public void Restart(){
             _gameover = true;
-            StartCoroutine("StartNewModeAtNextFrame");
+            StopAllCoroutines();
+            Action action = StartNewMode;
+            IEnumerator coroutine = StartAtNextFrame(action);
+            StartCoroutine(coroutine);
         }
 
-        IEnumerator StartNewModeAtNextFrame(){
+        IEnumerator StartAtNextFrame(Action action){
             yield return new WaitForEndOfFrame();
-            StartNewMode();
+            action();
         }
 
         public void StartNewMode(){
@@ -56,6 +60,29 @@ namespace unitrys{
 
         public void GameOver(){
             _gameover = true;
+            Action action = PlayGameOverAnimation;
+            IEnumerator coroutine = StartAtNextFrame(action);
+            StartCoroutine(coroutine);
+        }
+
+        private void PlayGameOverAnimation(){
+            StartCoroutine("GameOverAnimation");
+        }
+
+        IEnumerator GameOverAnimation(){
+            for(int i=0; i <= _mode.GRID_HEIGHT+1; i++){
+                yield return new WaitForSeconds(0.2f);
+				for(int j=0; j < _mode.GRID_WIDTH; j++){
+					Block blockBelow = _mode.blocks.Find(b => b.x == j && b.y == i-1);
+					if(blockBelow!=null){
+						blockBelow.empty = true;
+					}
+					Block block = _mode.blocks.Find(b => b.x == j && b.y == i);
+					if(!block.empty){
+						block.ResetColor();
+					}
+				}
+			}
         }
 
         public static Mode GetMode(){
