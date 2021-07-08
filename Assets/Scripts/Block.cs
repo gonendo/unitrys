@@ -15,7 +15,6 @@ namespace unitrys{
 
         void Awake(){
             _meshRenderer = GetComponent<MeshRenderer>();
-            _texture = _meshRenderer.material.GetTexture("_MainTex");
             _started = true;
             color = _color;
         }
@@ -28,6 +27,16 @@ namespace unitrys{
         // Update is called once per frame
         void Update()
         {
+        }
+
+        public Texture texture{
+            get{
+                return _texture;
+            }
+            set{
+                _texture = value;
+                _meshRenderer.material.SetTexture("_MainTex", _texture);
+            }
         }
 
         public bool locked{
@@ -83,7 +92,7 @@ namespace unitrys{
         }
 
         public void RestoreTexture(){
-            _meshRenderer.material.SetTexture("_MainTex", _texture);
+            texture = _texture;
         }
     }
 }

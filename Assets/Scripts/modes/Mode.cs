@@ -89,6 +89,7 @@ namespace unitrys{
                         Quaternion.Euler(0f, 180f, 0f), 
                         transform);
                     Block b = obj.GetComponent<Block>();
+                    b.texture = _theme.GetTexture();
                     b.x = i;
                     b.y = j;
                     b.empty = true;
@@ -346,6 +347,7 @@ namespace unitrys{
                         Quaternion.Euler(0f, 180f, 0f),
                         transform);
                     Block b = obj.GetComponent<Block>();
+                    b.texture = _theme.GetTexture();
                     b.color = color;
                     _previewBlocks.Add(obj);
                 }

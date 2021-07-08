@@ -1,6 +1,11 @@
 using UnityEngine;
+using UnityEditor;
 namespace unitrys{
     public class Theme{
+        public Texture GetTexture(){
+            string[] guids = AssetDatabase.FindAssets("block", new[] {"Assets/Textures"});
+            return AssetDatabase.LoadAssetAtPath<Texture>(AssetDatabase.GUIDToAssetPath(guids[0]));
+        }
         public Color GetColor(string pieceName){
             switch(pieceName){
                 case Piece.I:
