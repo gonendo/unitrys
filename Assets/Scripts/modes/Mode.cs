@@ -469,8 +469,10 @@ namespace unitrys{
                             gameObject.SendMessageUpwards("DisplayLevel", newLevel, SendMessageOptions.DontRequireReceiver); //TODO
                         }
                     }
-
-                    RenderPreview();
+                    
+                    if(!_firstPiece){
+                        RenderPreview();
+                    }
                 }
 
                 _firstPiece = false;
