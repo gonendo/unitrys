@@ -9,7 +9,9 @@ namespace unitrys{
         private GameObject _modeGameObject;
         private static Mode _mode;
         private Controls _controls;
+        private TextMeshPro _readyText;
         private static bool _gameover;
+        private static bool _rendered;
         private const bool DEBUG = false;
 
         public static Mode GetMode(){
@@ -19,7 +21,9 @@ namespace unitrys{
         // Start is called before the first frame update
         void Start()
         {
+            _readyText = GameObject.Find("Ready Text").GetComponent<TextMeshPro>();
             _gameover = true;
+            _rendered = false;
             StartNewMode();
         }
 
@@ -28,10 +32,14 @@ namespace unitrys{
         {
             _controls.Update();
             if(!_gameover){
+                if(!_rendered){
+                    _readyText.SetText("");
+                }
                 _mode.ProcessUpdate(Time.deltaTime);
                 foreach(Block block in _mode.blocks){
                     block.Render();
                 }
+                _rendered = true;
             }
         }
 
@@ -60,12 +68,6 @@ namespace unitrys{
             _mode = _modeGameObject.GetComponent<MasterMode>();
             _controls = new Controls(_mode);
 
-            Action action = StartReadyGO;
-            IEnumerator coroutine = StartAtNextFrame(action);
-            StartCoroutine(coroutine);
-        }
-
-        private void StartReadyGO(){
             StartCoroutine("ReadyGo");
         }
 
@@ -78,6 +80,7 @@ namespace unitrys{
                 startLevel = data.level;
             }
             _gameover = false;
+            _rendered = false;
             _mode.StartGame(startLevel);
         }
 
@@ -91,13 +94,10 @@ namespace unitrys{
         }
 
         IEnumerator ReadyGo(){
-            GameObject textObject = GameObject.Find("Ready Text");
-            TextMeshPro tmp = textObject.GetComponent<TextMeshPro>();
-            tmp.SetText("READY");
+            _readyText.SetText("READY");
             yield return new WaitForSeconds(0.8f);
-            tmp.SetText("GO !");
+            _readyText.SetText("GO !");
             yield return new WaitForSeconds(0.8f);
-            tmp.SetText("");
             StartGame();
         }
 
