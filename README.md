@@ -1,2 +1,2 @@
 # unitrys
-TGM2 Clone in Unity
+3D Tetris in Unity focused on the TGM Series
