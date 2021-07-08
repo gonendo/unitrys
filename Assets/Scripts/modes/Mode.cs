@@ -20,7 +20,6 @@ namespace unitrys{
         private GameObject _tetrionPrefab;
         private GameObject _blockPrefab;
         private GameObject _tetrion;
-        private DebugData _debugData;
 
         protected IRandomizer _randomizer;
         protected IRotationSystem _rotationSystem;
@@ -40,6 +39,7 @@ namespace unitrys{
         protected bool _autoShift = false;
         protected bool _hardDrop = false;
         protected bool _firstPiece = true;
+        protected bool _started = false;
 
         protected int _minClearedLineIndex = -1;
         protected int _lines = 0;
@@ -71,6 +71,24 @@ namespace unitrys{
             }
         }
 
+        public List<Block> blocks{
+            get{
+                return _blocks;
+            }
+        }
+
+        public List<Piece> history{
+            get{
+                return _history;
+            }
+        }
+
+        public bool started{
+            get{
+                return _started;
+            }
+        }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -97,17 +115,6 @@ namespace unitrys{
 				}
 			}
 
-            if(_debugData!=null){
-                _debugData.Load(_history, _blocks);
-                StartGame(_debugData.level);
-            }
-            else{
-                StartGame(0);
-            }
-        }
-
-        public void SetDebugData(DebugData data){
-            _debugData = data;
         }
 
         // Update is called once per frame
@@ -307,19 +314,15 @@ namespace unitrys{
             }
         }
 
-        public List<Block> blocks{
-            get{
-                return _blocks;
-            }
-        }
 
         private GameObject GetPrefab(string name){
             string[] guids = AssetDatabase.FindAssets(name, new[] {"Assets/Prefabs"});
             return AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guids[0]));
         }
 
-        private void StartGame(int level){
+        public void StartGame(int level){
             SetLevel(level);
+            _started = true;
             GiveNextPiece();
         }
 

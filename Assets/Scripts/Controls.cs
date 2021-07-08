@@ -15,6 +15,10 @@ namespace unitrys{
     }
 
     public void Update(){
+      if(!_mode.started){
+        return;
+      }
+      
       if(Input.GetAxisRaw("Vertical")==1){
         _mode.MovePiece(HARD_DROP_ACTION_ID);
       }

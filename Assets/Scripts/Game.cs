@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using TMPro;
 
 namespace unitrys{
     public class Game : MonoBehaviour
@@ -11,9 +12,14 @@ namespace unitrys{
         private static bool _gameover;
         private const bool DEBUG = false;
 
+        public static Mode GetMode(){
+            return _mode;
+        }
+
         // Start is called before the first frame update
         void Start()
         {
+            _gameover = true;
             StartNewMode();
         }
 
@@ -37,27 +43,6 @@ namespace unitrys{
             StartCoroutine(coroutine);
         }
 
-        IEnumerator StartAtNextFrame(Action action){
-            yield return new WaitForEndOfFrame();
-            action();
-        }
-
-        public void StartNewMode(){
-            if(_modeGameObject!=null){
-                Destroy(_modeGameObject);
-            }
-            _modeGameObject = new GameObject("Mode");
-            _modeGameObject.transform.SetParent(transform);
-            _modeGameObject.AddComponent<MasterMode>();
-            _mode = _modeGameObject.GetComponent<MasterMode>();
-            if(DEBUG){
-                TextAsset textAsset = Resources.Load<TextAsset>("debug");
-                _mode.SetDebugData(JsonUtility.FromJson<DebugData>(textAsset.text));
-            }
-            _controls = new Controls(_mode);
-            _gameover = false;
-        }
-
         public void GameOver(){
             _gameover = true;
             Action action = PlayGameOverAnimation;
@@ -65,8 +50,55 @@ namespace unitrys{
             StartCoroutine(coroutine);
         }
 
+        private void StartNewMode(){
+            if(_modeGameObject!=null){
+                Destroy(_modeGameObject);
+            }
+            _modeGameObject = new GameObject("Mode");
+            _modeGameObject.transform.SetParent(transform);
+            _modeGameObject.AddComponent<MasterMode>();
+            _mode = _modeGameObject.GetComponent<MasterMode>();
+            _controls = new Controls(_mode);
+
+            Action action = StartReadyGO;
+            IEnumerator coroutine = StartAtNextFrame(action);
+            StartCoroutine(coroutine);
+        }
+
+        private void StartReadyGO(){
+            StartCoroutine("ReadyGo");
+        }
+
+        private void StartGame(){
+            int startLevel = 0;
+            if(DEBUG){
+                TextAsset textAsset = Resources.Load<TextAsset>("debug");
+                DebugData data = JsonUtility.FromJson<DebugData>(textAsset.text);
+                data.Load(_mode.history, _mode.blocks);
+                startLevel = data.level;
+            }
+            _gameover = false;
+            _mode.StartGame(startLevel);
+        }
+
         private void PlayGameOverAnimation(){
             StartCoroutine("GameOverAnimation");
+        }
+
+        IEnumerator StartAtNextFrame(Action action){
+            yield return new WaitForEndOfFrame();
+            action();
+        }
+
+        IEnumerator ReadyGo(){
+            GameObject textObject = GameObject.Find("Ready Text");
+            TextMeshPro tmp = textObject.GetComponent<TextMeshPro>();
+            tmp.SetText("READY");
+            yield return new WaitForSeconds(0.8f);
+            tmp.SetText("GO !");
+            yield return new WaitForSeconds(0.8f);
+            tmp.SetText("");
+            StartGame();
         }
 
         IEnumerator GameOverAnimation(){
@@ -88,8 +120,6 @@ namespace unitrys{
 			}
         }
 
-        public static Mode GetMode(){
-            return _mode;
-        }
+        
     }
 }
