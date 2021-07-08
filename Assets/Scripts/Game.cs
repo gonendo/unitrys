@@ -72,16 +72,19 @@ namespace unitrys{
         IEnumerator GameOverAnimation(){
             for(int i=0; i <= _mode.GRID_HEIGHT+1; i++){
                 yield return new WaitForSeconds(0.2f);
-				for(int j=0; j < _mode.GRID_WIDTH; j++){
-					Block blockBelow = _mode.blocks.Find(b => b.x == j && b.y == i-1);
-					if(blockBelow!=null){
-						blockBelow.empty = true;
-					}
-					Block block = _mode.blocks.Find(b => b.x == j && b.y == i);
-					if(!block.empty){
-						block.ResetColor();
-					}
-				}
+                for (int j = 0; j < _mode.GRID_WIDTH; j++)
+                {
+                    Block blockBelow = _mode.blocks.Find(b => b.x == j && b.y == i - 1);
+                    if (blockBelow != null)
+                    {
+                        blockBelow.empty = true;
+                    }
+                    Block block = _mode.blocks.Find(b => b.x == j && b.y == i);
+                    if (!block.empty)
+                    {
+                        block.ResetColor();
+                    }
+                }
 			}
         }
 
