@@ -545,7 +545,7 @@ namespace unitrys{
 
         private void DropLinesNaive(){
             Sounds.play(Sounds.FALL);
-            for(int y=_minClearedLineIndex+1; y < GRID_HEIGHT; y++){
+            for(int y=_minClearedLineIndex+1; y <= GRID_HEIGHT; y++){
                 for(int x=0; x < GRID_WIDTH; x++){
                     Block blockToDrop = _blocks.Find(block => block.x == x && block.y == y);
                     if(!blockToDrop.empty){
