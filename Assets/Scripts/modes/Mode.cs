@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 namespace unitrys{
     public class Mode : MonoBehaviour
@@ -92,8 +91,8 @@ namespace unitrys{
         // Start is called before the first frame update
         void Start()
         {
-            _tetrionPrefab = GetPrefab("Tetrion");
-            _blockPrefab = GetPrefab("Block");
+            _tetrionPrefab = Resources.Load<GameObject>("Prefabs/Tetrion");
+            _blockPrefab = Resources.Load<GameObject>("Prefabs/Block");
 
             _tetrion = GameObject.Instantiate(_tetrionPrefab, transform);
 
@@ -314,11 +313,6 @@ namespace unitrys{
             }
         }
 
-
-        private GameObject GetPrefab(string name){
-            string[] guids = AssetDatabase.FindAssets(name, new[] {"Assets/Prefabs"});
-            return AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guids[0]));
-        }
 
         public void StartGame(int level){
             SetLevel(level);

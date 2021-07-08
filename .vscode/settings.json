@@ -6,6 +6,7 @@
         "Library":true,
         "Logs":true,
         "temp/":true,
-        "Temp/":true
+        "Temp/":true,
+        "**/*.meta":true
     }
 }
