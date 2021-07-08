@@ -58,6 +58,10 @@ namespace unitrys{
             StartCoroutine(coroutine);
         }
 
+        public void ReadyAnimationEnd(){
+            StartGame();
+        }
+
         private void StartNewMode(){
             if(_modeGameObject!=null){
                 Destroy(_modeGameObject);
@@ -68,7 +72,7 @@ namespace unitrys{
             _mode = _modeGameObject.GetComponent<MasterMode>();
             _controls = new Controls(_mode);
 
-            StartCoroutine("ReadyGo");
+            _readyText.GetComponent<Animator>().Play("Ready", -1, 0f);
         }
 
         private void StartGame(){
@@ -91,14 +95,6 @@ namespace unitrys{
         IEnumerator StartAtNextFrame(Action action){
             yield return new WaitForEndOfFrame();
             action();
-        }
-
-        IEnumerator ReadyGo(){
-            _readyText.SetText("READY");
-            yield return new WaitForSeconds(0.8f);
-            _readyText.SetText("GO !");
-            yield return new WaitForSeconds(0.8f);
-            StartGame();
         }
 
         IEnumerator GameOverAnimation(){
