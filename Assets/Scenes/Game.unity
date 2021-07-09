@@ -133,7 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 679081016}
   - component: {fileID: 679081015}
-  - component: {fileID: 679081014}
   m_Layer: 0
   m_Name: HUD Camera
   m_TagString: Untagged
@@ -141,14 +140,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &679081014
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 679081013}
-  m_Enabled: 1
 --- !u!20 &679081015
 Camera:
   m_ObjectHideFlags: 0
@@ -353,7 +344,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1489931566}
   - component: {fileID: 1489931565}
-  - component: {fileID: 1489931564}
   - component: {fileID: 1489931567}
   - component: {fileID: 1489931568}
   m_Layer: 0
@@ -363,14 +353,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1489931564
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1489931563}
-  m_Enabled: 1
 --- !u!20 &1489931565
 Camera:
   m_ObjectHideFlags: 0
