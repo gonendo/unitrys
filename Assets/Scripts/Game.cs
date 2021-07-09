@@ -10,12 +10,17 @@ namespace unitrys{
         private static Mode _mode;
         private Controls _controls;
         private TextMeshPro _readyText;
+        private ConfigData _config;
         private static bool _gameover;
         private static bool _rendered;
-        private const bool DEBUG = false;
 
         public static Mode GetMode(){
             return _mode;
+        }
+
+        void Awake(){
+            TextAsset textAsset = Resources.Load<TextAsset>("config");
+            _config = JsonUtility.FromJson<ConfigData>(textAsset.text);
         }
 
         // Start is called before the first frame update
@@ -77,12 +82,14 @@ namespace unitrys{
 
         private void StartGame(){
             int startLevel = 0;
-            if(DEBUG){
+            #if UNITY_EDITOR
+            if(_config.debug){
                 TextAsset textAsset = Resources.Load<TextAsset>("debug");
                 DebugData data = JsonUtility.FromJson<DebugData>(textAsset.text);
                 data.Load(_mode.history, _mode.blocks);
                 startLevel = data.level;
             }
+            #endif
             _gameover = false;
             _rendered = false;
             _mode.StartGame(startLevel);
