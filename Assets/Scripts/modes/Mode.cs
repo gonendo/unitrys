@@ -95,6 +95,10 @@ namespace unitrys{
             _blockPrefab = Resources.Load<GameObject>("Prefabs/Block");
 
             _tetrion = GameObject.Instantiate(_tetrionPrefab, transform);
+            for(int i=0; i < _tetrion.transform.childCount; i++){
+                GameObject child = _tetrion.transform.GetChild(i).gameObject;
+                child.layer = Layers.FOREGROUND;
+            }
 
 			for(int i=0; i < GRID_WIDTH; i++){
 				for(int j=0; j < GRID_HEIGHT+4; j++){
@@ -105,6 +109,7 @@ namespace unitrys{
                             0),
                         Quaternion.Euler(0f, 180f, 0f), 
                         transform);
+                    obj.layer = Layers.FOREGROUND;
                     Block b = obj.GetComponent<Block>();
                     b.texture = _theme.GetTexture();
                     b.x = i;
@@ -343,6 +348,7 @@ namespace unitrys{
                             0),
                         Quaternion.Euler(0f, 180f, 0f),
                         transform);
+                    obj.layer = Layers.FOREGROUND;
                     Block b = obj.GetComponent<Block>();
                     b.texture = _theme.GetTexture();
                     b.color = color;
