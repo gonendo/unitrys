@@ -37,6 +37,7 @@ namespace unitrys{
         protected bool _waitForDAS = false;
         protected bool _waitForLockDelay = false;
         protected bool _waitForLineClear = false;
+        protected bool _waitForSoftDrop = false;
         protected bool _autoShift = false;
         protected bool _hardDrop = false;
         protected bool _firstPiece = true;
@@ -50,6 +51,7 @@ namespace unitrys{
         protected float _count4 = 0; //counter for das
         protected float _count5 = 0; //counter for line clear
         protected float _count6 = 0; //counter for arr
+        protected float _count7 = 0; //counter for soft drop
 
         public Mode(){
             _theme = new Theme();
@@ -158,6 +160,7 @@ namespace unitrys{
             _count4+=delta;
             _count5+=delta;
             _count6+=delta;
+            _count7+=delta;
 
             if(Controls.IsActionUp(Controls.LEFT_ACTION_ID) || 
                 Controls.IsActionUp(Controls.RIGHT_ACTION_ID) || 
@@ -199,6 +202,7 @@ namespace unitrys{
                     }
                 }
             }
+
             if(_waitForLineClear && _count5 >= _level.lineClear){
                 _lines += _clearedLines.Count;
                 gameObject.SendMessageUpwards("DisplayLines", _lines, SendMessageOptions.DontRequireReceiver); //TODO
@@ -220,6 +224,10 @@ namespace unitrys{
 
                 _lineARE = _level.lineARE;
                 StartARE();
+            }
+
+            if(_waitForSoftDrop && _count7 >= 1){
+                _waitForSoftDrop = false;
             }
 
             if(_count >= 1){
@@ -288,9 +296,15 @@ namespace unitrys{
                         }
                         break;
                     case Controls.SOFT_DROP_ACTION_ID:
-                        if (!_waitForARE && !p.MoveDown())
-                        {
-                            StartLockDelay(_rotationSystem.SoftDropLock());
+                        if(!_waitForSoftDrop && !_waitForARE){
+                            for(int i=0; i < _level.arr; i++){
+                                if(!p.MoveDown()){
+                                    StartLockDelay(_rotationSystem.SoftDropLock());
+                                    break;
+                                }
+                            }
+                            _count7 = 0;
+                            _waitForSoftDrop = true;
                         }
                         break;
                     case Controls.HARD_DROP_ACTION_ID:
