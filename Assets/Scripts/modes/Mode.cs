@@ -180,14 +180,6 @@ namespace unitrys{
                 Sounds.play(Sounds.LOCK);
                 _waitForLockDelay = false;
                 GetCurrentPiece().locked = true;
-
-                for(int j=0; j < 20; j++){
-                    piece.MoveDown();
-                }
-                if(CheckLines()){
-                    StartLineClear();
-                }
-
                 _count = 1;
             }
 
@@ -238,21 +230,28 @@ namespace unitrys{
                         if(!piece.MoveDown()){
                             if(!piece.locked){
                                 if(!_waitForLockDelay){
-                                    StartLockDelay();
+                                    StartLockDelay(_hardDrop && _rotationSystem.HardDropLock());
                                 }
                             }
-                            else if(!_waitForLockDelay){
-                                GiveNextPiece();
+                            else{
+                                if(CheckLines()){
+                                    StartLineClear();
+                                }
+                                else{
+                                    GiveNextPiece();
+                                }
                             }
                         }
                         else if(piece.locked){
-                            for(int j=0; j < 20; j++){
-                                piece.MoveDown();
+                            if(_rotationSystem.AllowStepReset()){
+                                piece.locked = false;
+                                StartLockDelay();
                             }
-                            if(CheckLines()){
-                                StartLineClear();
+                            else{
+                                for(int j=0; j < GRID_HEIGHT; j++){
+                                    piece.MoveDown();
+                                }
                             }
-                            break;
                         }
                     }
                 }
@@ -275,17 +274,15 @@ namespace unitrys{
                 switch (actionId)
                 {
                     case Controls.LEFT_ACTION_ID:
-                        if(!_autoShift || _count6 >= 1){
-                            for(int i=0; i < _level.arr; i++){
-                                p.MoveLeft();
-                            }
-                            _count6=0;
-                        }
-                        break;
                     case Controls.RIGHT_ACTION_ID:
                         if(!_autoShift || _count6 >= 1){
                             for(int i=0; i < _level.arr; i++){
-                                p.MoveRight();
+                                if(actionId==Controls.LEFT_ACTION_ID){
+                                    p.MoveLeft();
+                                }
+                                else{
+                                    p.MoveRight();
+                                }
                             }
                             _count6=0;
                         }
@@ -293,7 +290,7 @@ namespace unitrys{
                     case Controls.SOFT_DROP_ACTION_ID:
                         if (!_waitForARE && !p.MoveDown())
                         {
-                            StartLockDelay(true);
+                            StartLockDelay(_rotationSystem.SoftDropLock());
                         }
                         break;
                     case Controls.HARD_DROP_ACTION_ID:
@@ -530,9 +527,9 @@ namespace unitrys{
             }
         }
 
-        private void StartLockDelay(bool instant=false){
+        private void StartLockDelay(bool instantLock=false){
             if(_level.lockDelay > 0){
-                _count3 = !instant ? 0 : _level.lockDelay;
+                _count3 = !instantLock ? 0 : _level.lockDelay;
                 _waitForLockDelay = true;
             }
         }

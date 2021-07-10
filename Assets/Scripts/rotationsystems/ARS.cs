@@ -233,6 +233,18 @@ namespace unitrys{
             return Rotate(blocks, piece, Controls.ROTATE_LEFT_ACTION_ID);
         }
 
+        bool IRotationSystem.AllowStepReset(){
+            return true;
+        }
+
+        bool IRotationSystem.HardDropLock(){
+            return false;
+        }
+
+        bool IRotationSystem.SoftDropLock(){
+            return true;
+        }
+
         private int GetPieceSize(string pieceName){
             switch(pieceName){
                 case Piece.O:

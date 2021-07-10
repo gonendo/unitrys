@@ -6,5 +6,8 @@ namespace unitrys{
         int GetNumberOfRotationStates(string pieceName);
         List<Block> RotateClockWise(List<Block> blocks, Piece piece);
         List<Block> RotateCounterClockWise(List<Block> blocks, Piece piece);
+        bool AllowStepReset();
+        bool HardDropLock();
+        bool SoftDropLock();
     }
 }
