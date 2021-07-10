@@ -17,7 +17,6 @@ namespace unitrys{
         }
 
         public void OnAnimationEnd(){
-            Debug.Log("animationEnd");
             SendMessageUpwards("RotationEnd", SendMessageOptions.DontRequireReceiver);
         }
     }
