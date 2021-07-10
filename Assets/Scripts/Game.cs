@@ -7,35 +7,38 @@ namespace unitrys{
     public class Game : MonoBehaviour
     {
         private GameObject _modeGameObject;
+        private GameObject _menuGameObject;
         private static Mode _mode;
         private Controls _controls;
         private TextMeshPro _readyText;
         private ConfigData _config;
-        private static bool _gameover;
-        private static bool _rendered;
+        private bool _gameover;
+        private bool _rendered;
+        private int _state;
 
         public static Mode GetMode(){
             return _mode;
         }
 
         void Awake(){
+            _controls = new Controls();
             TextAsset textAsset = Resources.Load<TextAsset>("config");
             _config = JsonUtility.FromJson<ConfigData>(textAsset.text);
+            _readyText = GameObject.Find("Ready Text").GetComponent<TextMeshPro>();
+            _gameover = true;
+            _rendered = false;
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            _readyText = GameObject.Find("Ready Text").GetComponent<TextMeshPro>();
-            _gameover = true;
-            _rendered = false;
-            StartNewMode();
+            DisplayMenu();
         }
 
         // Update is called once per frame
         void Update()
         {
-            _controls.Update();
+            _controls.Update(_state);
             if(!_gameover){
                 if(!_rendered){
                     _readyText.SetText("");
@@ -51,33 +54,59 @@ namespace unitrys{
         public void Restart(){
             _gameover = true;
             StopAllCoroutines();
-            Action action = StartNewMode;
-            IEnumerator coroutine = StartAtNextFrame(action);
-            StartCoroutine(coroutine);
+            Action<string> action = StartNewMode;
+            StartCoroutine(StartAtNextFrame(action, _mode.GetId()));
         }
 
         public void GameOver(){
             _gameover = true;
-            Action action = PlayGameOverAnimation;
-            IEnumerator coroutine = StartAtNextFrame(action);
-            StartCoroutine(coroutine);
+            Action<string> action = PlayGameOverAnimation;
+            StartCoroutine(StartAtNextFrame(action, "GameOverAnimation"));
         }
 
         public void ReadyAnimationEnd(){
             StartGame();
         }
 
-        private void StartNewMode(){
+        public void DisplayMenu(){
+            _gameover = true;
+            StopAllCoroutines();
             if(_modeGameObject!=null){
                 Destroy(_modeGameObject);
             }
+
+            GameObject menuPrefab = Resources.Load<GameObject>("Prefabs/Menu");
+            _menuGameObject = GameObject.Instantiate(menuPrefab, transform);
+            _controls.observer = _menuGameObject.GetComponent<Menu>();
+            _state = GameState.MENU;
+        }
+
+        public void StartNewMode(string modeId){
+            if(_menuGameObject!=null){
+                Destroy(_menuGameObject);
+            }
+            if(_modeGameObject!=null){
+                Destroy(_modeGameObject);
+            }
+
             _modeGameObject = new GameObject("Mode");
             _modeGameObject.transform.SetParent(transform);
-            _modeGameObject.AddComponent<MasterMode>();
-            _mode = _modeGameObject.GetComponent<MasterMode>();
-            _controls = new Controls(_mode);
+
+            switch(modeId){
+                case MasterMode.id:
+                    _modeGameObject.AddComponent<MasterMode>();
+                    _mode = _modeGameObject.GetComponent<MasterMode>();
+                    break;
+                case DeathMode.id:
+                    _modeGameObject.AddComponent<DeathMode>();
+                    _mode = _modeGameObject.GetComponent<DeathMode>();
+                    break;
+            }
+            
+            _controls.observer = _mode;
 
             _readyText.GetComponent<Animator>().Play("Ready", -1, 0f);
+            _state = GameState.IN_GAME;
         }
 
         private void StartGame(){
@@ -95,13 +124,13 @@ namespace unitrys{
             _mode.StartGame(startLevel);
         }
 
-        private void PlayGameOverAnimation(){
-            StartCoroutine("GameOverAnimation");
+        private void PlayGameOverAnimation(string coroutine){
+            StartCoroutine(coroutine);
         }
 
-        IEnumerator StartAtNextFrame(Action action){
+        IEnumerator StartAtNextFrame(Action<string> action, string param){
             yield return new WaitForEndOfFrame();
-            action();
+            action(param);
         }
 
         IEnumerator GameOverAnimation(){

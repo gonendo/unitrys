@@ -1,9 +1,12 @@
 /*
 Based on https://tetris.fandom.com/wiki/Tetris_The_Absolute_The_Grand_Master_2
 */
+using UnityEngine;
 namespace unitrys{
     public class MasterMode : Mode
     {
+        public const string id = "Master";
+        public const string TETRION_COLOR = "#0B43FF";
         public MasterMode() : base(){
             _randomizer = new TGMRandomizer();
             _rotationSystem = new ARS();
@@ -49,6 +52,18 @@ namespace unitrys{
             _gravities.Add(420, 1024); // 4G
             _gravities.Add(450, 768); // 3G
             _gravities.Add(500, 5120); // 20G
+        }
+
+        protected override Color GetTetrionColor()
+        {
+            Color color;
+            ColorUtility.TryParseHtmlString(TETRION_COLOR, out color);
+            return color;
+        }
+
+        public override string GetId()
+        {
+            return id;
         }
     }
 }

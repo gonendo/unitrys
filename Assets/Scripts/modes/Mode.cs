@@ -2,11 +2,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace unitrys{
-    public class Mode : MonoBehaviour
+    public class Mode : MonoBehaviour, IControlsObserver
     {
         public int GRID_WIDTH = 10;
         public int GRID_HEIGHT = 20;
         private const float TARGET_DELTA_TIME = 1f/60;
+        private const int _returnToMenuSeconds = 1;
 
         protected Dictionary<int[], int[]> _timings;
         protected Dictionary<int, int> _gravities;
@@ -82,12 +83,6 @@ namespace unitrys{
             }
         }
 
-        public bool started{
-            get{
-                return _started;
-            }
-        }
-
         // Start is called before the first frame update
         void Start()
         {
@@ -99,6 +94,7 @@ namespace unitrys{
                 GameObject child = _tetrion.transform.GetChild(i).gameObject;
                 child.layer = Layers.FOREGROUND;
             }
+            Utils.ChangeTetrionColor(_tetrion, GetTetrionColor());
 
 			for(int i=0; i < GRID_WIDTH; i++){
 				for(int j=0; j < GRID_HEIGHT+4; j++){
@@ -124,6 +120,32 @@ namespace unitrys{
         // Update is called once per frame
         void Update()
         {
+        }
+
+        public void HandleAction(string actionId, object param=null){
+            if(!_started){
+                return;
+            }
+            switch(actionId){
+                case "Restart":
+                    if((int)param >= _returnToMenuSeconds){
+                        SendMessageUpwards("DisplayMenu", SendMessageOptions.DontRequireReceiver);
+                    }
+                    else{
+                        SendMessageUpwards("Restart", SendMessageOptions.DontRequireReceiver);
+                    }
+                    break;
+                case Controls.HARD_DROP_ACTION_ID:
+                case Controls.SOFT_DROP_ACTION_ID:
+                case Controls.LEFT_ACTION_ID:
+                case Controls.RIGHT_ACTION_ID:
+                    MovePiece(actionId);
+                    break;
+                case Controls.ROTATE_LEFT_ACTION_ID:
+                case Controls.ROTATE_RIGHT_ACTION_ID:
+                    RotatePiece(actionId);
+                    break;
+            }
         }
 
         public void ProcessUpdate(float deltaTime){
@@ -234,7 +256,7 @@ namespace unitrys{
             }
         }
 
-        public void MovePiece(string actionId)
+        private void MovePiece(string actionId)
         {
             if ((_waitForDAS && (actionId == Controls.LEFT_ACTION_ID || actionId == Controls.RIGHT_ACTION_ID)) ||
             _waitForLineClear || (_waitForARE && _autoShift))
@@ -277,7 +299,7 @@ namespace unitrys{
             }
         }
 
-        public void RotatePiece(string actionId){
+        private void RotatePiece(string actionId){
             Piece piece = GetCurrentPiece();
             List<Block> rotatedBlocks = null;
             if(piece!=null && !_waitForLineClear){
@@ -637,6 +659,14 @@ namespace unitrys{
                 _history.Add(_randomizer.GetNextPiece());
                 return _history[1];
             }
+        }
+
+        protected virtual Color GetTetrionColor(){
+            return new Color();
+        }
+
+        public virtual string GetId(){
+            return "Mode";
         }
     }
 }
