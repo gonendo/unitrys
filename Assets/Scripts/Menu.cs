@@ -12,7 +12,6 @@ namespace unitrys{
         private int _count;
         private int _entryIndex;
         private List<GameObject> _tetrionsObjects;
-        private 
 
         void Awake(){
             _tetrionsParent = GameObject.Find("Tetrions");
@@ -57,11 +56,13 @@ namespace unitrys{
             }
             switch(actionId){
                 case Controls.LEFT_ACTION_ID:
-                    StartCoroutine(RotateY(-90));
+                    _rotating = true;
+                    _tetrionsParent.GetComponent<Animator>().Play("MenuRotateMinus90", -1, 0);
                     _count--;
                     break;
                 case Controls.RIGHT_ACTION_ID:
-                    StartCoroutine(RotateY(90));
+                    _rotating = true;
+                    _tetrionsParent.GetComponent<Animator>().Play("MenuRotate90", -1, 0);
                     _count++;
                     break;
                 case Controls.SELECT_ACTION_ID:
@@ -86,15 +87,7 @@ namespace unitrys{
             }
         }
 
-        IEnumerator RotateY(int angle){
-            _rotating = true;
-
-            int direction = angle < 0 ? -1 : 1;
-            for(int i=0; i < Mathf.Abs(angle); i++){
-                _tetrionsParent.transform.Rotate(new Vector3(0, direction, 0));
-                yield return new WaitForSeconds(0.005f);
-            }
-            
+        public void RotationEnd(){
             _rotating = false;
         }
     }
