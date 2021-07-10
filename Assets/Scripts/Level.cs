@@ -4,9 +4,10 @@ namespace unitrys{
     private float _gravity;
     private int _are;
     private int _lineARE;
-    private int _das;
+    private int _das; //delay
     private int _lockDelay;
     private int _lineClear;
+    private int _arr;
 
     public int level{
       get{
@@ -43,8 +44,13 @@ namespace unitrys{
         return _lineClear;
       }
     }
+    public int arr{
+      get{
+        return _arr;
+      }
+    }
 
-    public Level(int level, float gravity, int are, int lineARE, int das, int lockDelay, int lineClear){
+    public Level(int level, float gravity, int are, int lineARE, int das, int lockDelay, int lineClear, int arr){
       _level = level;
       _gravity = gravity;
       _are = are;
@@ -52,6 +58,7 @@ namespace unitrys{
       _das = das;
       _lockDelay = lockDelay;
       _lineClear = lineClear;
+      _arr = arr;
     }
   }
 }

@@ -15,12 +15,12 @@ namespace unitrys{
 
         protected override void SetTimings()
         {
-            _timings.Add(new int[2] {0, 499}, new int[5] {25,0,16,30,40});
-            _timings.Add(new int[2] {500, 599}, new int[5] {25,0,10,30,25});
-            _timings.Add(new int[2] {600, 699}, new int[5] {25,0,10,30,16});
-            _timings.Add(new int[2] {700, 799}, new int[5] {16,0,10,30,12});
-            _timings.Add(new int[2] {800, 899}, new int[5] {12,0,16,30,40});
-            _timings.Add(new int[2] {900, 999}, new int[5] {12,0,16,30,40});
+            _timings.Add(new int[2] {0, 499}, new int[6] {25,0,16,30,40,1});
+            _timings.Add(new int[2] {500, 599}, new int[6] {25,0,10,30,25,1});
+            _timings.Add(new int[2] {600, 699}, new int[6] {25,0,10,30,16,1});
+            _timings.Add(new int[2] {700, 799}, new int[6] {16,0,10,30,12,1});
+            _timings.Add(new int[2] {800, 899}, new int[6] {12,0,16,30,40,1});
+            _timings.Add(new int[2] {900, 999}, new int[6] {12,0,16,30,40,1});
 
             _gravities.Add(0, 4);
             _gravities.Add(30, 6);

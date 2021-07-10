@@ -16,6 +16,7 @@ namespace unitrys{
         protected const int DAS_TIMINGS_INDEX = 2;
         protected const int LOCK_TIMINGS_INDEX = 3;
         protected const int LINECLEAR_TIMINGS_INDEX = 4;
+        protected const int ARR_TIMINGS_INDEX = 5;
 
         private GameObject _tetrionPrefab;
         private GameObject _blockPrefab;
@@ -48,6 +49,7 @@ namespace unitrys{
         protected float _count3 = 0; //counter for lock delay
         protected float _count4 = 0; //counter for das
         protected float _count5 = 0; //counter for line clear
+        protected float _count6 = 0; //counter for arr
 
         public Mode(){
             _theme = new Theme();
@@ -155,6 +157,7 @@ namespace unitrys{
             _count3+=delta;
             _count4+=delta;
             _count5+=delta;
+            _count6+=delta;
 
             if(Controls.IsActionUp(Controls.LEFT_ACTION_ID) || 
                 Controls.IsActionUp(Controls.RIGHT_ACTION_ID) || 
@@ -170,6 +173,7 @@ namespace unitrys{
             if(_waitForDAS && (_count4 >= _level.das)){
                 _waitForDAS = false;
                 _autoShift = true;
+                _count6 = 0;
             }
             
             if(_waitForLockDelay && (_count3 >= _level.lockDelay)){
@@ -271,10 +275,20 @@ namespace unitrys{
                 switch (actionId)
                 {
                     case Controls.LEFT_ACTION_ID:
-                        p.MoveLeft();
+                        if(!_autoShift || _count6 >= 1){
+                            for(int i=0; i < _level.arr; i++){
+                                p.MoveLeft();
+                            }
+                            _count6=0;
+                        }
                         break;
                     case Controls.RIGHT_ACTION_ID:
-                        p.MoveRight();
+                        if(!_autoShift || _count6 >= 1){
+                            for(int i=0; i < _level.arr; i++){
+                                p.MoveRight();
+                            }
+                            _count6=0;
+                        }
                         break;
                     case Controls.SOFT_DROP_ACTION_ID:
                         if (!_waitForARE && !p.MoveDown())
@@ -614,7 +628,8 @@ namespace unitrys{
                 timings[LINE_ARE_TIMINGS_INDEX], 
                 timings[DAS_TIMINGS_INDEX], 
                 timings[LOCK_TIMINGS_INDEX], 
-                timings[LINECLEAR_TIMINGS_INDEX]
+                timings[LINECLEAR_TIMINGS_INDEX],
+                timings[ARR_TIMINGS_INDEX]
             );
         }
 
