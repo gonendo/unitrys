@@ -18,10 +18,14 @@ namespace unitrys{
         private bool _gameover;
         private bool _rendered;
         private int _state;
-        private float _time;
+        private static float _time;
 
         public static Mode GetMode(){
             return _mode;
+        }
+
+        public static float GetTime(){
+            return _time;
         }
 
         void Awake(){

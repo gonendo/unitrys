@@ -24,6 +24,7 @@ namespace unitrys{
 
         protected IRandomizer _randomizer;
         protected IRotationSystem _rotationSystem;
+        protected IRule _rule;
         protected Theme _theme;
         protected List<Block> _blocks;
         protected List<Piece> _history;
@@ -84,6 +85,12 @@ namespace unitrys{
         public List<Piece> history{
             get{
                 return _history;
+            }
+        }
+
+        public int level{
+            get{
+                return _level.level;
             }
         }
 
@@ -213,10 +220,7 @@ namespace unitrys{
             if(_waitForLineClear && _count5 >= _level.lineClear){
                 _lines += _clearedLines.Count;
                 gameObject.SendMessageUpwards("DisplayLines", _lines, SendMessageOptions.DontRequireReceiver); //TODO
-                int newLevel = _level.level+_clearedLines.Count;
-                newLevel = Mathf.Min(newLevel, _maxLevel);
-                SetLevel(newLevel);
-                gameObject.SendMessageUpwards("DisplayLevel", newLevel, SendMessageOptions.DontRequireReceiver);
+                _rule.IncreaseLevel(_clearedLines.Count, true);
                 
                 DropLinesNaive();
 
@@ -224,7 +228,7 @@ namespace unitrys{
                 _clearedLines.Clear();
                 _waitForLineClear = false;
 
-                if(newLevel == _maxLevel){
+                if(_rule.CheckGameOver()){
                     gameObject.SendMessageUpwards("GameOver", SendMessageOptions.DontRequireReceiver);
                     return;
                 }
@@ -516,12 +520,7 @@ namespace unitrys{
                     //increase level
                     if (next.name != Piece.EMPTY)
                     {
-                        if ((_level.level < _maxLevel - 1) && string.Format("{0:D3}", _level.level).Substring(1, 2) != "99")
-                        {
-                            int newLevel = _level.level + 1;
-                            SetLevel(newLevel);
-                            gameObject.SendMessageUpwards("DisplayLevel", newLevel, SendMessageOptions.DontRequireReceiver);
-                        }
+                        _rule.IncreaseLevel(1, false);
                     }
                     
                     RenderPreview();
@@ -649,7 +648,7 @@ namespace unitrys{
             );
         }
 
-        protected void SetLevel(int level){
+        public void SetLevel(int level){
             _level = GetLevel(level);
         }
 

@@ -10,6 +10,7 @@ namespace unitrys{
         public MasterMode() : base(){
             _randomizer = new TGMRandomizer();
             _rotationSystem = new ARS();
+            _rule = new TGM2Rule(this);
             _maxLevel = 999;
         }
 
