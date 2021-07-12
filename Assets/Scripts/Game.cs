@@ -8,13 +8,17 @@ namespace unitrys{
     {
         private GameObject _modeGameObject;
         private GameObject _menuGameObject;
+        private GameObject _levelGameObject;
         private static Mode _mode;
         private Controls _controls;
         private TextMeshPro _readyText;
+        private TextMeshPro _timeText;
+        private TextMeshPro _levelText;
         private ConfigData _config;
         private bool _gameover;
         private bool _rendered;
         private int _state;
+        private float _time;
 
         public static Mode GetMode(){
             return _mode;
@@ -25,6 +29,9 @@ namespace unitrys{
             TextAsset textAsset = Resources.Load<TextAsset>("config");
             _config = JsonUtility.FromJson<ConfigData>(textAsset.text);
             _readyText = GameObject.Find("Ready Text").GetComponent<TextMeshPro>();
+            _timeText = GameObject.Find("Time Text").GetComponent<TextMeshPro>();
+            _levelGameObject = GameObject.Find("Level");
+            _levelText = _levelGameObject.transform.Find("Level Text").GetComponent<TextMeshPro>();
             _gameover = true;
             _rendered = false;
         }
@@ -43,6 +50,8 @@ namespace unitrys{
                 if(!_rendered){
                     _readyText.SetText("");
                 }
+                _time += Time.deltaTime;
+                DisplayTime(_time);
                 _mode.ProcessUpdate(Time.deltaTime);
                 foreach(Block block in _mode.blocks){
                     block.Render();
@@ -74,7 +83,9 @@ namespace unitrys{
             if(_modeGameObject!=null){
                 Destroy(_modeGameObject);
             }
-
+            _levelText.SetText("");
+            _levelGameObject.SetActive(false);
+            _timeText.SetText("");
             GameObject menuPrefab = Resources.Load<GameObject>("Prefabs/Menu");
             _menuGameObject = GameObject.Instantiate(menuPrefab, transform);
             _controls.observer = _menuGameObject.GetComponent<Menu>();
@@ -105,6 +116,9 @@ namespace unitrys{
             
             _controls.observer = _mode;
 
+            _levelText.SetText("");
+            _levelGameObject.SetActive(false);
+            _timeText.SetText("");
             _readyText.GetComponent<Animator>().Play("Ready", -1, 0f);
             _state = GameState.IN_GAME;
         }
@@ -121,7 +135,23 @@ namespace unitrys{
             #endif
             _gameover = false;
             _rendered = false;
+            _time = 0;
+            DisplayLevel(startLevel);
+            _levelGameObject.SetActive(true);
+            DisplayTime(_time);
             _mode.StartGame(startLevel);
+        }
+
+        private void DisplayTime(float time){
+            float minutes = Mathf.FloorToInt(time / 60);
+            float seconds = Mathf.FloorToInt(time % 60);
+            float milliSeconds = (time % 1) * 1000;
+            _timeText.SetText(string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, milliSeconds));
+        }
+
+        private void DisplayLevel(int level){
+            string lvl = level.ToString();
+            _levelText.SetText(lvl.PadLeft(6-lvl.Length)+"\n"+_mode.maxLevel);
         }
 
         private void PlayGameOverAnimation(string coroutine){

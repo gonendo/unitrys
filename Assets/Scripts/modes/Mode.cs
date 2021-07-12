@@ -87,6 +87,12 @@ namespace unitrys{
             }
         }
 
+        public int maxLevel{
+            get{
+                return _maxLevel;
+            }
+        }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -209,7 +215,7 @@ namespace unitrys{
                 int newLevel = _level.level+_clearedLines.Count;
                 newLevel = Mathf.Min(newLevel, _maxLevel);
                 SetLevel(newLevel);
-                gameObject.SendMessageUpwards("DisplayLevel", newLevel, SendMessageOptions.DontRequireReceiver); //TODO
+                gameObject.SendMessageUpwards("DisplayLevel", newLevel, SendMessageOptions.DontRequireReceiver);
                 
                 DropLinesNaive();
 
@@ -513,7 +519,7 @@ namespace unitrys{
                         {
                             int newLevel = _level.level + 1;
                             SetLevel(newLevel);
-                            gameObject.SendMessageUpwards("DisplayLevel", newLevel, SendMessageOptions.DontRequireReceiver); //TODO
+                            gameObject.SendMessageUpwards("DisplayLevel", newLevel, SendMessageOptions.DontRequireReceiver);
                         }
                     }
                     
