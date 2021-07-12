@@ -7,7 +7,6 @@ namespace unitrys{
         public int GRID_WIDTH = 10;
         public int GRID_HEIGHT = 20;
         private const float TARGET_DELTA_TIME = 1f/60;
-        private const int _returnToMenuSeconds = 1;
 
         protected Dictionary<int[], int[]> _timings;
         protected Dictionary<int, int> _gravities;
@@ -145,13 +144,11 @@ namespace unitrys{
                 return;
             }
             switch(actionId){
-                case "Restart":
-                    if((int)param >= _returnToMenuSeconds){
-                        SendMessageUpwards("DisplayMenu", SendMessageOptions.DontRequireReceiver);
-                    }
-                    else{
-                        SendMessageUpwards("Restart", SendMessageOptions.DontRequireReceiver);
-                    }
+                case Controls.RESTART_ACTION_ID:
+                    SendMessageUpwards("Restart", SendMessageOptions.DontRequireReceiver);
+                    break;
+                case Controls.RETURN_TO_MENU_ACTION_ID:
+                    SendMessageUpwards("DisplayMenu", SendMessageOptions.DontRequireReceiver);
                     break;
                 case Controls.HARD_DROP_ACTION_ID:
                 case Controls.SOFT_DROP_ACTION_ID:
@@ -162,6 +159,9 @@ namespace unitrys{
                 case Controls.ROTATE_LEFT_ACTION_ID:
                 case Controls.ROTATE_RIGHT_ACTION_ID:
                     RotatePiece(actionId);
+                    break;
+                case Controls.INPUT_ACTION_MOVE_UP:
+                    ResetDAS();
                     break;
             }
         }
@@ -175,12 +175,6 @@ namespace unitrys{
             _count5+=delta;
             _count6+=delta;
             _count7+=delta;
-
-            if(Controls.IsActionUp(Controls.LEFT_ACTION_ID) || 
-                Controls.IsActionUp(Controls.RIGHT_ACTION_ID) || 
-                Controls.IsActionUp(Controls.SOFT_DROP_ACTION_ID)){
-                ResetDAS();
-            }
 
             Piece piece = GetCurrentPiece();
             if(piece!=null && piece.name == Piece.EMPTY && !_waitForARE){

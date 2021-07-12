@@ -17,7 +17,7 @@ namespace unitrys{
         private ConfigData _config;
         private bool _gameover;
         private bool _rendered;
-        private int _state;
+        private static int _state;
         private static float _time;
 
         public static Mode GetMode(){
@@ -28,8 +28,12 @@ namespace unitrys{
             return _time;
         }
 
+        public static int GetState(){
+            return _state;
+        }
+
         void Awake(){
-            _controls = new Controls();
+            _controls = GameObject.Find("Controls").GetComponent<Controls>();
             TextAsset textAsset = Resources.Load<TextAsset>("config");
             _config = JsonUtility.FromJson<ConfigData>(textAsset.text);
             _readyText = GameObject.Find("Ready Text").GetComponent<TextMeshPro>();
@@ -49,7 +53,6 @@ namespace unitrys{
         // Update is called once per frame
         void Update()
         {
-            _controls.Update(_state);
             if(!_gameover){
                 if(!_rendered){
                     _readyText.SetText("");
