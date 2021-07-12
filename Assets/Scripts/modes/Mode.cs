@@ -652,6 +652,10 @@ namespace unitrys{
             _level = GetLevel(level);
         }
 
+        public virtual int GetCurrentMaxLevel(){
+            return _maxLevel;
+        }
+
         protected int[] GetTimings(int level){
             int[] timings = {};
             foreach(KeyValuePair<int[],int[]> values in _timings){

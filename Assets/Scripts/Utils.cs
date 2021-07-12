@@ -8,5 +8,13 @@ namespace unitrys{
                 meshRenderer.material.color = color;
             }
         }
+        public static int GetCurrentMaxLevel(int level, int maxLevel){
+            for(int i=0; i < maxLevel; i+=100){
+                if(level < i){
+                    return i;
+                }
+            }
+            return maxLevel;
+        }
     }
 }

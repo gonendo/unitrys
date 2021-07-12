@@ -66,5 +66,10 @@ namespace unitrys{
         {
             return id;
         }
+
+        public override int GetCurrentMaxLevel()
+        {
+            return Utils.GetCurrentMaxLevel(_level!=null ? _level.level : 0, maxLevel);
+        }
     }
 }
