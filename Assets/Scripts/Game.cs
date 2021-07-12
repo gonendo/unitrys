@@ -133,6 +133,7 @@ namespace unitrys{
             if(_config.debug){
                 TextAsset textAsset = Resources.Load<TextAsset>("debug");
                 DebugData data = JsonUtility.FromJson<DebugData>(textAsset.text);
+                _mode.history.Clear();
                 data.Load(_mode.history, _mode.blocks);
                 startLevel = data.level;
             }
