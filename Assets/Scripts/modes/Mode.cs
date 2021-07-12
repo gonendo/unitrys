@@ -125,6 +125,7 @@ namespace unitrys{
 				}
 			}
 
+            RenderPreview();
         }
 
         // Update is called once per frame
@@ -523,9 +524,7 @@ namespace unitrys{
                         }
                     }
                     
-                    if(!_firstPiece){
-                        RenderPreview();
-                    }
+                    RenderPreview();
                 }
 
                 _firstPiece = false;
