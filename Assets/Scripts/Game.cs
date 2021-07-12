@@ -156,7 +156,7 @@ namespace unitrys{
 
         private void DisplayLevel(int level){
             string lvl = level.ToString();
-            _levelText.SetText(lvl.PadLeft(6-lvl.Length)+"\n"+_mode.GetCurrentMaxLevel());
+            _levelText.SetText(lvl.PadLeft(3)+"\n"+_mode.GetCurrentMaxLevel());
         }
 
         private void PlayGameOverAnimation(string coroutine){
