@@ -231,7 +231,7 @@ namespace unitrys{
             }
 
             if(_count >= 1){
-                int numRows = !_hardDrop ? 1 : (int)_count;
+                int numRows = Mathf.FloorToInt(_count);
                 for(int i=0; i < numRows; i++){
                     piece = GetCurrentPiece();
                     if(piece!=null && !_waitForLineClear && !_waitForARE){
