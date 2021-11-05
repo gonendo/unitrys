@@ -143,6 +143,12 @@ namespace unitrys{
         }
 
         public void HandleAction(string actionId, object param=null){
+            if(actionId == Controls.ROTATE_LEFT_ACTION_ID){
+                _rotateLeftPressed = true;
+            }
+            else if(actionId == Controls.ROTATE_RIGHT_ACTION_ID){
+                _rotateRightPressed = true;
+            }
             if(!_started){
                 return;
             }
@@ -160,7 +166,6 @@ namespace unitrys{
                     MovePiece(actionId);
                     break;
                 case Controls.ROTATE_LEFT_ACTION_ID:
-                    _rotateLeftPressed = true;
                     if(_waitForARE){
                         _rotationDuringARE = true;
                     }
@@ -170,7 +175,6 @@ namespace unitrys{
                     _rotateLeftPressed = false;
                     break;
                 case Controls.ROTATE_RIGHT_ACTION_ID:
-                    _rotateRightPressed = true;
                     if(_waitForARE){
                         _rotationDuringARE = true;
                     }
