@@ -8,7 +8,9 @@ namespace unitrys{
         public const string LEFT_ACTION_ID = "move_left";
         public const string RIGHT_ACTION_ID = "move_right";
         public const string ROTATE_LEFT_ACTION_ID = "rotate_left";
+        public const string RELEASE_ROTATE_LEFT_ACTION_ID = "release_rotate_left";
         public const string ROTATE_RIGHT_ACTION_ID = "rotate_right";
+        public const string RELEASE_ROTATE_RIGHT_ACTION_ID = "release_rotate_right";
         public const string SOFT_DROP_ACTION_ID = "soft_drop";
         public const string HARD_DROP_ACTION_ID = "hard_drop";
         public const string SELECT_ACTION_ID = "select";
@@ -59,6 +61,15 @@ namespace unitrys{
                 if(Game.GetState() == GameState.IN_GAME){
                     _observer.HandleAction(INPUT_ACTION_MOVE_UP);
                 }
+            };
+            
+            InputAction _fire1Action = GetComponent<PlayerInput>().currentActionMap["Fire1"];
+            _fire1Action.canceled += ctx => {
+                _observer.HandleAction(RELEASE_ROTATE_LEFT_ACTION_ID);
+            };
+            InputAction _fire2Action = GetComponent<PlayerInput>().currentActionMap["Fire2"];
+            _fire2Action.canceled += ctx => {
+                _observer.HandleAction(RELEASE_ROTATE_RIGHT_ACTION_ID);
             };
         }
     

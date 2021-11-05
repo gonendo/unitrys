@@ -42,6 +42,9 @@ namespace unitrys{
         protected bool _hardDrop = false;
         protected bool _firstPiece = true;
         protected bool _started = false;
+        protected bool _rotateLeftPressed = false;
+        protected bool _rotateRightPressed = false;
+        protected bool _rotationDuringARE = false;
 
         protected int _minClearedLineIndex = -1;
         protected int _lines = 0;
@@ -157,8 +160,24 @@ namespace unitrys{
                     MovePiece(actionId);
                     break;
                 case Controls.ROTATE_LEFT_ACTION_ID:
-                case Controls.ROTATE_RIGHT_ACTION_ID:
+                    _rotateLeftPressed = true;
+                    if(_waitForARE){
+                        _rotationDuringARE = true;
+                    }
                     RotatePiece(actionId);
+                    break;
+                case Controls.RELEASE_ROTATE_LEFT_ACTION_ID:
+                    _rotateLeftPressed = false;
+                    break;
+                case Controls.ROTATE_RIGHT_ACTION_ID:
+                    _rotateRightPressed = true;
+                    if(_waitForARE){
+                        _rotationDuringARE = true;
+                    }
+                    RotatePiece(actionId);
+                    break;
+                case Controls.RELEASE_ROTATE_RIGHT_ACTION_ID:
+                    _rotateRightPressed = false;
                     break;
                 case Controls.INPUT_ACTION_MOVE_UP:
                     ResetDAS();
@@ -195,6 +214,15 @@ namespace unitrys{
             }
 
             if(_waitForARE && (_count2 >= _level.are+_lineARE)){
+                if(!_rotationDuringARE){
+                    if(_rotateLeftPressed){
+                        RotatePiece(Controls.ROTATE_LEFT_ACTION_ID);
+                    }
+                    else if(_rotateRightPressed){
+                        RotatePiece(Controls.ROTATE_RIGHT_ACTION_ID);
+                    }
+                }
+                _rotationDuringARE = false;
                 _waitForARE = false;
                 _hardDrop = false;
                 RenderNextPiece();
