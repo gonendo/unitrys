@@ -59,3 +59,5 @@ Build
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Unity3D user settings
+UserSettings/
