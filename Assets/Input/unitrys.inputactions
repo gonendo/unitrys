@@ -11,7 +11,8 @@
                     "id": "428c8e66-2b84-4013-b7fb-60213d371b54",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Fire1",
@@ -19,7 +20,8 @@
                     "id": "695f177a-bd7e-4485-b104-327016b68575",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Fire2",
@@ -27,7 +29,8 @@
                     "id": "e0e307c2-3d1b-4349-9bb3-b0ab9c75a03d",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Select",
@@ -35,7 +38,8 @@
                     "id": "8e83454d-c921-4657-a13c-c8ad85a177cf",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Restart",
@@ -43,7 +47,8 @@
                     "id": "6b9a6e86-97bf-4261-a63b-8b458d356bd1",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -183,6 +188,17 @@
                     "name": "",
                     "id": "cd52be0e-dbb9-47fd-87b3-1f4b908f7da8",
                     "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9e5957b8-0d93-4785-baa5-685e34f9fb8d",
+                    "path": "<Keyboard>/z",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
