@@ -11,6 +11,7 @@ namespace unitrys{
         private GameObject _levelGameObject;
         private static Mode _mode;
         private Controls _controls;
+        private static SoundManager _soundManager;
         private TextMeshPro _readyText;
         private TextMeshPro _timeText;
         private TextMeshPro _levelText;
@@ -32,8 +33,13 @@ namespace unitrys{
             return _state;
         }
 
+        public static SoundManager GetSoundManager(){
+            return _soundManager;
+        }
+
         void Awake(){
             _controls = GameObject.Find("Controls").GetComponent<Controls>();
+            _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
             TextAsset textAsset = Resources.Load<TextAsset>("config");
             _config = JsonUtility.FromJson<ConfigData>(textAsset.text);
             _readyText = GameObject.Find("Ready Text").GetComponent<TextMeshPro>();
@@ -70,11 +76,13 @@ namespace unitrys{
         public void Restart(){
             _gameover = true;
             StopAllCoroutines();
+            _soundManager.StopAllSounds();
             Action<string> action = StartNewMode;
             StartCoroutine(StartAtNextFrame(action, _mode.GetId()));
         }
 
         public void GameOver(){
+            _soundManager.PlaySound(Sounds.SOUND_GAMEOVER);
             _gameover = true;
             Action<string> action = PlayGameOverAnimation;
             StartCoroutine(StartAtNextFrame(action, "GameOverAnimation"));
@@ -87,6 +95,7 @@ namespace unitrys{
         public void DisplayMenu(){
             _gameover = true;
             StopAllCoroutines();
+            _soundManager.StopAllSounds();
             if(_modeGameObject!=null){
                 Destroy(_modeGameObject);
             }

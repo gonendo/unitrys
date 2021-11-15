@@ -14,6 +14,7 @@ namespace unitrys{
         public const string T = "T";
 
         private string _name;
+        private string _soundId;
         private int _rotationState;
         private bool _locked;
         private bool _visible;
@@ -24,6 +25,7 @@ namespace unitrys{
 
         public Piece(string name){
             _name = name;
+            _soundId = Sounds.GetPieceSoundId(_name);
             _blocks = new List<Block>();
             _boundingBoxCoordinates = new Dictionary<Block,int[]>();
         }
@@ -31,6 +33,12 @@ namespace unitrys{
         public string name{
             get{
                 return _name;
+            }
+        }
+
+        public string soundId{
+            get{
+                return _soundId;
             }
         }
 

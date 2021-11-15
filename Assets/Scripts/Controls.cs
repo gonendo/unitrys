@@ -17,6 +17,7 @@ namespace unitrys{
         public const string RESTART_ACTION_ID = "restart";
         public const string RETURN_TO_MENU_ACTION_ID = "return";
         public const string INPUT_ACTION_MOVE_UP = "moveUp";
+        public const string RELEASE_SOFT_DROP_ACTION_ID = "release_soft_drop";
 
         private float _timer = 0.0f;
         private bool _restarting;
@@ -89,6 +90,9 @@ namespace unitrys{
         }
 
         private void move(){
+            if(_moveActionValue.y == 0){
+                _observer.HandleAction(RELEASE_SOFT_DROP_ACTION_ID);
+            }
             if(_moveActionValue.Equals(Vector2.zero)){
                 return;
             }

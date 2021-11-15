@@ -66,8 +66,9 @@ namespace unitrys{
                     _count++;
                     break;
                 case Controls.SELECT_ACTION_ID:
+                    Game.GetSoundManager().PlaySound(Sounds.SOUND_MODE_SELECT);
                     MenuEntry entry = _menuEntries[_entryIndex];
-                    SendMessageUpwards(entry.message, entry.messageParam, SendMessageOptions.DontRequireReceiver);
+                    StartCoroutine(ModeSelectSoundCheckEnd(entry));
                     break;
             }
 
@@ -85,6 +86,13 @@ namespace unitrys{
                     _count = 0;
                 }
             }
+        }
+
+        IEnumerator ModeSelectSoundCheckEnd(MenuEntry entry){
+            while(Game.GetSoundManager().IsPlaying(Sounds.SOUND_MODE_SELECT)){
+                yield return null;
+            }
+            SendMessageUpwards(entry.message, entry.messageParam, SendMessageOptions.DontRequireReceiver);
         }
 
         public void RotationEnd(){

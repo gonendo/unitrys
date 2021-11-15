@@ -142,7 +142,7 @@ namespace unitrys{
         {
         }
 
-        public void HandleAction(string actionId, object param=null){
+        public virtual void HandleAction(string actionId, object param=null){
             if(actionId == Controls.ROTATE_LEFT_ACTION_ID){
                 _rotateLeftPressed = true;
             }
@@ -211,7 +211,7 @@ namespace unitrys{
             }
             
             if(_waitForLockDelay && (_count3 >= _level.lockDelay)){
-                Sounds.play(Sounds.LOCK);
+                Game.GetSoundManager().PlaySound(Sounds.SOUND_LOCK);
                 _waitForLockDelay = false;
                 GetCurrentPiece().locked = true;
                 _count = 1;
@@ -275,6 +275,9 @@ namespace unitrys{
                         if(!piece.MoveDown()){
                             if(!piece.locked){
                                 if(!_waitForLockDelay){
+                                    if(!Game.GetSoundManager().IsPlaying(Sounds.SOUND_GROUND)){
+                                        Game.GetSoundManager().PlaySound(Sounds.SOUND_GROUND);
+                                    }
                                     StartLockDelay(_hardDrop && _rotationSystem.HardDropLock());
                                 }
                             }
@@ -333,21 +336,11 @@ namespace unitrys{
                         }
                         break;
                     case Controls.SOFT_DROP_ACTION_ID:
-                        if(!_waitForSoftDrop && !_waitForARE){
-                            for(int i=0; i < _level.arr; i++){
-                                if(!p.MoveDown()){
-                                    StartLockDelay(_rotationSystem.SoftDropLock());
-                                    break;
-                                }
-                            }
-                            _count7 = 0;
-                            _waitForSoftDrop = true;
-                        }
+                        SoftDrop(p);
                         break;
                     case Controls.HARD_DROP_ACTION_ID:
                         if (!_waitForARE && !_hardDrop)
                         {
-                            Sounds.play(Sounds.HARD_DROP);
                             _count = GRID_HEIGHT;
                             _hardDrop = true;
                         }
@@ -443,6 +436,10 @@ namespace unitrys{
                     x=0;
                     y++;
                 }
+            }
+            
+            if(!_firstPiece){
+                Game.GetSoundManager().PlaySound(piece.soundId);
             }
         }
 
@@ -571,7 +568,7 @@ namespace unitrys{
             }
         }
 
-        private void StartLockDelay(bool instantLock=false){
+        protected void StartLockDelay(bool instantLock=false){
             if(_level.lockDelay > 0){
                 _count3 = !instantLock ? 0 : _level.lockDelay;
                 _waitForLockDelay = true;
@@ -611,7 +608,10 @@ namespace unitrys{
             }
             
             if(_clearedLines.Count > 0){
-                Sounds.play(Sounds.CLEAR);
+                Game.GetSoundManager().PlaySound(Sounds.SOUND_CLEAR);
+                if(_clearedLines.Count == 4){
+                    Game.GetSoundManager().PlaySound(Sounds.SOUND_TETRIS);
+                }
             }
 
             foreach(int lineIndex in _clearedLines){
@@ -626,7 +626,7 @@ namespace unitrys{
         }
 
         private void DropLinesNaive(){
-            Sounds.play(Sounds.FALL);
+            Game.GetSoundManager().PlaySound(Sounds.SOUND_FALL);
             for(int y=_minClearedLineIndex+1; y <= GRID_HEIGHT; y++){
                 for(int x=0; x < GRID_WIDTH; x++){
                     Block blockToDrop = _blocks.Find(block => block.x == x && block.y == y);
@@ -646,6 +646,26 @@ namespace unitrys{
                     }
                 }
             }
+        }
+
+        protected virtual bool SoftDrop(Piece p){
+            if(!_waitForSoftDrop && !_waitForARE){
+                bool softDropLock = false;
+                for(int i=0; i < _level.arr; i++){
+                    if(!p.MoveDown()){
+                        softDropLock = _rotationSystem.SoftDropLock();
+                        if(!_hardDrop && !_waitForLockDelay){
+                            Game.GetSoundManager().PlaySound(Sounds.SOUND_GROUND);
+                        }
+                        StartLockDelay(softDropLock);
+                        break;
+                    }
+                }
+                _count7 = 0;
+                _waitForSoftDrop = true;
+                return softDropLock;
+            }
+            return false;
         }
 
         protected Level GetLevel(int level){

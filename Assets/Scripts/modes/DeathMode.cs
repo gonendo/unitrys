@@ -4,6 +4,9 @@ namespace unitrys{
     {
         public const string id = "T.A Death";
         public const string TETRION_COLOR = "#FF0000";
+
+        private bool _hasSoftDropLocked;
+
         public DeathMode() : base(){
             _randomizer = new TGMRandomizer();
             _rotationSystem = new ARS();
@@ -37,6 +40,23 @@ namespace unitrys{
         public override int GetCurrentMaxLevel()
         {
             return Utils.GetCurrentMaxLevel(_level!=null ? _level.level : 0, maxLevel);
+        }
+
+        public override void HandleAction(string actionId, object param = null)
+        {
+            base.HandleAction(actionId, param);
+            if(actionId == Controls.RELEASE_SOFT_DROP_ACTION_ID){
+                _hasSoftDropLocked = false;
+            }
+        }
+
+        protected override bool SoftDrop(Piece p)
+        {
+            if(!_hasSoftDropLocked){
+                _hasSoftDropLocked = base.SoftDrop(p);
+            }
+
+            return _hasSoftDropLocked;
         }
     }
 }

@@ -1,21 +1,33 @@
 namespace unitrys{
   public class Sounds{
-    public const string I_PIECE = "I_piece";
-    public const string J_PIECE = "J_piece";
-    public const string L_PIECE = "L_piece";
-    public const string Z_PIECE = "Z_piece";
-    public const string S_PIECE = "S_piece";
-    public const string O_PIECE = "O_piece";
-    public const string T_PIECE = "T_piece";
-    public const string CLEAR = "Clear";
-    public const string FALL = "Fall";
-    public const string LOCK = "Lock";
-    public const string HARD_DROP = "HardDrop";
-    public const string READY = "Ready";
-    public const string GO = "Go";
+    public const string SOUND_MODE_SELECT = "SEI_mode_ok";
+    public const string SOUND_READY = "ready";
+    public const string SOUND_GO = "go";
+    public const string SOUND_FALL = "SEB_fall";
+    public const string SOUND_LOCK = "secchi01";
+    public const string SOUND_GROUND = "secchi02";
+    public const string SOUND_CLEAR = "SEB_disappear";
+    public const string SOUND_TETRIS = "s_hakushu";
+    public const string SOUND_GAMEOVER = "SEP_gameover";
 
-    public static void play(string soundId){
-      //TODO
+    public static string GetPieceSoundId(string pieceName){
+        switch(pieceName){
+            case Piece.O:
+                return "SEB_mino1";
+            case Piece.J:
+                return "SEB_mino2";
+            case Piece.L:
+                return "SEB_mino3";
+            case Piece.Z:
+                return "SEB_mino4";
+            case Piece.S:
+                return "SEB_mino5";
+            case Piece.T:
+                return "SEB_mino6";
+            case Piece.I:
+                return "SEB_mino7";
+        }
+        return null;
     }
   }
 }
